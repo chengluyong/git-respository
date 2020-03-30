@@ -21,7 +21,7 @@ class Pie extends Component
           text: this.props.data.title,
           textStyle:
             {
-              color: 'blue'
+              color: '#17a2b8'
             },
           left: 'center'
         },

@@ -1,130 +1,196 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
 
-const columns = [
-  { id: 'name', label: 'Name', minWidth: 170 },
-  { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
-  {
-    id: 'population',
-    label: 'Population',
-    minWidth: 170,
-    align: 'right',
-    format: value => value.toLocaleString(),
-  },
-  {
-    id: 'size',
-    label: 'Size\u00a0(km\u00b2)',
-    minWidth: 170,
-    align: 'right',
-    format: value => value.toLocaleString(),
-  },
-  {
-    id: 'density',
-    label: 'Density',
-    minWidth: 170,
-    align: 'right',
-    format: value => value.toFixed(2),
-  },
-];
 
-function createData(name, code, population, size) {
-  const density = population / size;
-  return { name, code, population, size, density };
+/**
+ * 根据showNumber allPage onChange(function（当前页）//传入当前页跟新是的函数)
+ */
+class TestIndex extends React.Component
+{
+  constructor(props)
+  {
+    super(props);
+    this.state=
+        {
+          _pageArray: get_page_array(1, this.props.showNumber, 1),    //init
+          _allPage: this.props.allPage             // 总页数
+        };
+    this.currentPage = 1;   // 记录当前页
+
+    this.previous = this.previous.bind(this);
+    this.next = this.next.bind(this);
+    this.page_click = this.page_click.bind(this);
+  }
+
+  previous()
+  {
+    if(this.currentPage <= 1)
+    {
+      alert('当前是第一页');
+      return 0;
+    }
+
+    this.currentPage--;
+    const pageObject = get_page_index( this.currentPage, this.props.showNumber, this.props.allPage );
+    const pageArray = get_page_array( pageObject.startPage, pageObject.endPage, this.currentPage );
+    this.props.onChange(this.currentPage);
+    this.setState({ _pageArray: pageArray })
+  }
+
+  next()
+  {
+    if(this.currentPage >= this.props.allPage)
+    {
+      alert('当前是最后一页');
+      return 0;
+    }
+
+    this.currentPage++;
+    const pageObject = get_page_index( this.currentPage, this.props.showNumber, this.props.allPage );
+    const pageArray = get_page_array( pageObject.startPage, pageObject.endPage, this.currentPage );
+    this.props.onChange(this.currentPage);
+    this.setState({ _pageArray: pageArray })
+  }
+
+  page_click( index )
+  {
+    console.log(index);
+    if(this.currentPage !== index)
+    {
+      this.currentPage = index;
+      const pageObject = get_page_index( this.currentPage, this.props.showNumber, this.props.allPage );
+      const pageArray = get_page_array( pageObject.startPage, pageObject.endPage, this.currentPage );
+      this.props.onChange(this.currentPage);
+      this.setState({ _pageArray: pageArray })
+    }
+
+  }
+
+  render()
+  {
+    console.log(this.props.showNumber);
+
+    const _index = (object, i)=>
+    {
+      return object._show?
+         <button key={ i }
+                 type="button"
+                 className="btn btn-secondary"
+                 style={ { width: '2.7rem',margin: '0 0.5rem', background: 'white', color: '#6c757d' } }
+                 onClick={ ()=> this.page_click(object.value) }
+         >
+           { object.value }
+         </button>:
+         <button
+             key={ i }
+             type="button"
+             className="btn btn-secondary"
+             style={ { width: '2.7rem', margin: '0 0.2rem' } }
+             onClick={ ()=> this.page_click(object.value) }
+         >
+           { object.value }
+         </button>;
+    };
+
+    const ele =
+        <div>
+          <button type="button" className="btn btn-secondary btn-sm" style={ { marginRight: '25px'} }
+                  onClick={ this.previous }
+          >上一页</button>
+
+          { this.state._pageArray.map( _index ) }
+
+          <button type="button" className="btn btn-secondary btn-sm" style={ { marginLeft: '25px'} }
+                  onClick={ this.next }
+          >下一页</button>
+
+
+        </div>
+    ;
+
+    return ele;
+  }
 }
 
-const rows = [
-  createData('India', 'IN', 1324171354, 3287263),
-  createData('China', 'CN', 1403500365, 9596961),
-  createData('Italy', 'IT', 60483973, 301340),
-  createData('United States', 'US', 327167434, 9833520),
-  createData('Canada', 'CA', 37602103, 9984670),
-  createData('Australia', 'AU', 25475400, 7692024),
-  createData('Germany', 'DE', 83019200, 357578),
-  createData('Ireland', 'IE', 4857000, 70273),
-  createData('Mexico', 'MX', 126577691, 1972550),
-  createData('Japan', 'JP', 126317000, 377973),
-  createData('France', 'FR', 67022000, 640679),
-  createData('United Kingdom', 'GB', 67545757, 242495),
-  createData('Russia', 'RU', 146793744, 17098246),
-  createData('Nigeria', 'NG', 200962417, 923768),
-  createData('Brazil', 'BR', 210147125, 8515767),
-];
+/**
+ * 获取页数数组
+ * @param startIndex  开始页数
+ * @param lastIndex   结束页数
+ * @param currentPage
+ * @returns {[]|*[]}  页数数组
+ */
+function get_page_array( startIndex, lastIndex, currentPage )
+{
+  if( currentPage <= lastIndex && currentPage >= startIndex)
+    {
+      let array = [];
 
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-  },
-  container: {
-    maxHeight: 440,
-  },
-});
+      for(let i = startIndex; i <= lastIndex; i++)
+      {
+        if(currentPage === i)
+        {
+          array.push({ _show: true, value: i });
+          continue;
+        }
+        array.push({ _show: false, value: i })
+      }
 
-export default function StickyHeadTable() {
-  const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  return (
-    <Paper className={classes.root}>
-      <TableContainer className={classes.container}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map(column => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                  {columns.map(column => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === 'number' ? column.format(value) : value}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
-      />
-    </Paper>
-  );
+      return array;
+    }
+  return [];
 }
+
+/**
+ * 根据当前页，展示页数，总页数返回开始页，结束页
+ * @param currentPage
+ * @param showPage
+ * @param allPage
+ */
+function get_page_index( currentPage, showPage, allPage )
+{
+ // debugger;
+  if(allPage <= showPage)       // 总页数下雨等于要展示的页数
+  {
+    return { startPage: 1, endPage: allPage };
+  }
+
+  if( showPage%2 !== 0 )        // 展示页数为奇数
+  {
+    const firstPage = currentPage-((showPage-1)/2);
+    if( firstPage < 1 )         // 第一页小于1
+    {
+      return { startPage: 1, endPage: showPage };
+    }
+    else
+    {
+      const lastPage = currentPage+((showPage-1)/2);
+      if( lastPage > allPage )    // 最后一页大于总页数
+      {
+        debugger;
+        return { startPage: allPage-showPage+1, endPage: allPage };
+      }
+
+      return { startPage: currentPage-((showPage-1)/2), endPage: currentPage+((showPage-1)/2) };
+    }
+  }
+  else
+  {
+    const firstPage = currentPage-showPage/2;
+    if( firstPage >= 1 )         // 第一页大于1
+    {
+      const lastPage = currentPage+showPage/2;
+      if( lastPage > allPage )    // 最后一页大于总页数
+      {
+        return { startPage: allPage-showPage+1, endPage: allPage };
+      }
+
+      return { startPage: currentPage-showPage/2+1, endPage: currentPage+showPage/2 };
+    }
+    else
+    {
+      return { startPage: 1, endPage: showPage };
+    }
+  }
+
+}
+
+export default TestIndex;

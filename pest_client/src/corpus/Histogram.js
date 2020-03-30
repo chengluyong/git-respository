@@ -13,8 +13,6 @@ class Histogram extends Component
 
   render()
   {
-    //console.log(this.props.data);
-
     //x轴字体倾斜度
     let x_show = {
       rotate: 40
@@ -40,7 +38,7 @@ class Histogram extends Component
           text: this.props.data.title,
           textStyle:
             {
-              color: 'blue'
+              color: '#17a2b8'
             },
           x: 'center',
         },
@@ -58,7 +56,7 @@ class Histogram extends Component
           barWidth: 20,
           itemStyle: {
             normal:{
-              color: 'blue',
+              color: '#17a2b8',
               label: {
                 show: true,
                 position: 'top'
@@ -75,7 +73,7 @@ class Histogram extends Component
     const _tr = (d, i)=>
     {
         return  <tr key={ i }>
-          <th style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem'} } scope="row">{ d.name }</th>
+          <th style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem', color: '#6c757d'} } scope="row">{ d.name }</th>
           <td style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem'} }>{ d.count }</td>
           <td style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem'} }>{ d.rate }</td>
         </tr>
@@ -86,8 +84,8 @@ class Histogram extends Component
         <div className={ 'col-6' }>
 
           <table className="table table-striped">
-            <thead className="thead" style={ { background: "#483D8B", color: "white"} }>
-            <tr>
+            <thead className="thead" style={ { color: "white"} }>
+            <tr style={ { background: '#17a2b8' } }>
               <th style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem'} } scope="col"> { this.props.data.type } </th>
               <th style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem'} } scope="col">人数</th>
               <th style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem'} } scope="col">比例</th>

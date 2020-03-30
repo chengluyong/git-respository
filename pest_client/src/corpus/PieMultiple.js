@@ -14,8 +14,8 @@ class PieMultiple extends Component
 
     const _tr = (d, i)=>
     {
-      return  <tr key={ i }>
-        <th style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem'} } scope="row">{ d.name }</th>
+      return  <tr key={ i } >
+        <th style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem', color: '#6c757d'} } scope="row">{ d.name }</th>
         <td style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem'} }>{  d.value }</td>
         <td style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem'} }>{ `${ d.rate }%`}</td>
       </tr>
@@ -26,7 +26,7 @@ class PieMultiple extends Component
         <div className={ 'col-6' }>
           <table className="table table-striped">
             <thead className="thead" style={ { background: "#483D8B", color: "white"} }>
-            <tr>
+            <tr style={ {  background: '#17a2b8'} }>
               <th style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem'} } scope="col"> { this.props.data_severity.type } </th>
               <th style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem'} } scope="col">人数</th>
               <th style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem'} } scope="col">比例</th>
@@ -48,7 +48,7 @@ class PieMultiple extends Component
         <div className={ 'col-6' }>
           <table className="table table-striped">
             <thead className="thead" style={ { background: "#483D8B", color: "white"} }>
-            <tr>
+            <tr style={ { background: '#17a2b8' } }>
               <th style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem'} } scope="col"> { this.props.data_sex.type } </th>
               <th style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem'} } scope="col">人数</th>
               <th style={ {'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'padding': '0.15rem 0.5rem'} } scope="col">比例</th>

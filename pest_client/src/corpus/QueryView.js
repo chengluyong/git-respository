@@ -1,7 +1,7 @@
 import React from 'react';
 import {Query} from "react-apollo";
 import {query_list_group_by_id} from "./graphql/schema";
-import EchartRouter from "./EchartRouter"
+import EchartsMain from "./EchartsMain"
 
 
 
@@ -26,7 +26,7 @@ class QueryView extends React.Component
               return <div>错误</div>;
             }
 
-            return <EchartRouter data={ data }/>;
+            return <EchartsMain data={ data }/>;
           }
         }
       </Query>;

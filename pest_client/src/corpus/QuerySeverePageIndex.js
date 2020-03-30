@@ -6,7 +6,7 @@ import TestIndex from "./TestIndex";
 
 
 //条数
-class QueryPageIndex extends React.Component
+class QuerySeverePageIndex extends React.Component
 {
   render()
   {
@@ -15,7 +15,7 @@ class QueryPageIndex extends React.Component
     console.log(showNumber);
 
     const ele =
-      <Query query={ query_count } variables={ { type: 'normal'} } fetchPolicy={ 'cache-and-network' }>
+      <Query query={ query_count } variables={ { type: "severe" } } fetchPolicy={ 'cache-and-network' }>
         {
           ({loading, error, data,  subscribeToMore, networkStatus}) =>
           {
@@ -36,7 +36,7 @@ class QueryPageIndex extends React.Component
               all_page = Math.ceil(data.get_count.count/showNumber);
             }
 
-            return <TestIndex showNumber = { 5 } allPage = { all_page } onChange = { this.props.update }/>;
+            return <TestIndex showNumber = { all_page } allPage = { all_page } onChange = { this.props.update }/>;
           }
         }
       </Query>;
@@ -46,4 +46,4 @@ class QueryPageIndex extends React.Component
 }
 
 
-export default QueryPageIndex;
+export default QuerySeverePageIndex;
