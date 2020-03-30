@@ -86,7 +86,7 @@ const definitions =
       photo_logging: String 
       mutiple: String 
     }
-  
+   
     type count
     {
       count: Int
@@ -103,16 +103,101 @@ const definitions =
       result: Int
     }
    
+    type severe_patient
+    {
+      name: Int 
+      sex: String 
+      age: String 
+      complain: String 
+      disease_time: String 
+      visit_time: String 
+      time_space: String 
+      diagnosis_time: String 
+      blood_pressure: String 
+      fever: String 
+      temperate: String 
+      cough: String 
+      expectoration: String 
+      myodynia: String 
+      tired: String 
+      short_of_breath: String 
+      diarrhea: String 
+      rhinobyon: String 
+      running_nose: String 
+      pharyngalgia: String 
+      diabetes: String 
+      coronary_heart_disease: String 
+      high_blood_pressure: String 
+      chronic_obstructive_pulmonary_disease: String 
+      liver_disease_history: String 
+      kidney_disease_history: String 
+      malignancy: String 
+      Rheumatic_immunity: String 
+      ILD: String 
+      immunosuppressive: String 
+      fat: String 
+      tuberculosis_history: String 
+      smoke: String 
+      drink: String 
+      wuhan_people_contach_history: String 
+      patient_community_respiratory_symptoms: String 
+      Cluster_disease: String 
+      virus_patient_contact_history: String 
+      no_contact_history: String 
+      incubation: String 
+      double_lungs: String 
+      one_lungs: String 
+      lesions_location: String 
+      ct_no_exception: String 
+      pleural_effussion: String 
+      real_change: String 
+      spot_like_shadow: String 
+      class_milling: String 
+      shadow_of_infiltration: String 
+      cable_shadow: String 
+      checkout_date: String 
+      WBC: String 
+      RBC: String 
+      HB_or_HGB: String 
+      PLT: String 
+      NEUT_OR_N: String 
+      percentage_NEUT_OR_N: String 
+      LY: String 
+      percentage_LY: String 
+      M_OR_MONO: String 
+      PERCENTAGE_M_OR_MONO: String 
+      E: String 
+      B: String 
+      CRP: String 
+      ESR: String 
+      PCT: String 
+      CK_MB: String 
+      oxygen_concentration: String 
+      oxygen_number: String 
+      PH: String 
+      PaO2: String 
+      SaO2: String 
+      PCO2: String 
+      Lac: String 
+      GPT_OR_ALT: String 
+      GOT_OR_AST: String 
+      severity_of_disease: String 
+      remark: String
+
+    }
+   
   type Query
   {
-    #查询信息
+    #查询轻症患者信息
     get_information(index: Int!, rows: Int!): [patient]
     #查询信息
     get_information_group_by_name: [patient]
     #查询条数
-    get_count: count
+    get_count(type: String!): count
     #查询患者病例报告
     get_report(name: Int!): report
+    #查询所有重症患者
+    get_severe_patient(index: Int!, rows: Int!): [severe_patient]
   }
   
   type Mutation
@@ -132,9 +217,11 @@ const resolvers =
             //查询每个患者的数据
             get_information_group_by_name: () => mysql_deal.get_information_group_by_name(),
 
-            get_count: () => mysql_deal.get_count(),
+            get_count: (_, { type }) => mysql_deal.get_count(type),
 
             get_report: (_, { name } )=> mysql_deal.get_report(name),
+
+            get_severe_patient: (_, { index, rows }) => mysql_deal.get_severe_patient(index, rows),
           },
 
        Mutation:

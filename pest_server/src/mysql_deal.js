@@ -5,6 +5,8 @@ import configure from "./configure";
 
 function  to_object(arr_name, arr_value)
 {
+  console.log(arr_value);
+
   let obj = {};
 
   if(arr_name.length === arr_value.length)
@@ -21,8 +23,11 @@ function  to_object(arr_name, arr_value)
 
 class  mysql_deal
 {
+  //时间格式转换
   static change_data(object)
   {
+    console.log(object);
+
     let o = object;
 
     if(o.hasOwnProperty('disease_time'))
@@ -91,7 +96,7 @@ class  mysql_deal
 
     const sql = build_sql.get_information_group_by_name(configure.database_field.names_all);
 
-    await session.sql(sql).execute(r => data.push(to_object(configure.database_field.names_all, r)));
+    await session.sql(sql).execute(r => data.push(to_object(configure.database_field.names_all, r))).catch(e => console.log(e));
 
     session.close();
 
@@ -102,12 +107,16 @@ class  mysql_deal
    * cly 2020-3-5
    * 查询条数
    */
-  static async get_count()
+  static async get_count(type)
   {
-    let number = 0, obj = {};
+    let number = 0, obj = {}, sql = '';
     const session = await mysqlx.getSession(configure.connection);
 
-    const sql = build_sql.get_count();
+    if( type === "normal" )
+      sql = build_sql.get_count();
+
+    if( type === "severe" )
+    sql = build_sql.get_severe_count();
 
     await session.sql(sql).execute(r => {
       number = r[0]
@@ -158,6 +167,30 @@ class  mysql_deal
     await browser.close();
     return 1;
   }
+
+
+  /**
+   *
+   * @param index
+   * @param rows
+   * @returns {Promise<void>}
+   */
+  static async get_severe_patient(index ,rows)
+  {
+    let data = [];
+
+    const session = await mysqlx.getSession(configure.connection);
+
+    const sql = build_sql.get_severe_patient(configure.database_field.sever_patient, (index-1)*rows, rows);
+
+    console.log(sql);
+
+    await session.sql(sql).execute(r => data.push(mysql_deal.change_data(to_object(configure.database_field.sever_patient, r))));
+
+    session.close();
+
+    return data;
+  }
 }
 
 
@@ -175,18 +208,30 @@ class build_sql
 
     return `select ${ parameter } from ${ configure.database.name }.${ configure.database.table } group by name`;
   }
-  static get_count()
+  static get_count(type)
   {
-    return `select count(id) from ${ configure.database.name }.${ configure.database.table } `
+    return `select count(id) from ${ configure.database.name }.${ configure.database.table }`;
+  }
+  static get_severe_count()
+  {
+    return `select count(id) from ${ configure.database_severe.name }.${ configure.database_severe.table }`;
   }
   static get_report_by_name( name )
   {
     return `select name, report from ${ configure.database_report.name }.${ configure.database_report.table } where name = ${ name }`
   }
+  static get_severe_patient(field, startRows, rows)
+  {
+    const parameter = field.join(',');
+
+    return `select ${ parameter } from ${ configure.database_severe.name }.${ configure.database_severe.table } order by name limit ${ startRows }, ${ rows }`;
+  }
 }
 
 function formatDate(numb, format)
 {
+  console.log(numb, format);
+
   const time = new Date((numb - 1) * 24 * 3600000 + 1);
   time.setYear(time.getFullYear() - 70);
   const year = time.getFullYear() + '';
