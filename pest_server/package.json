@@ -5,7 +5,7 @@
   "dependencies": {
     "@mysql/xdevapi": "8.0.19",
     "adm-zip": "latest",
-    "apollo-server-express": "^1.3.6",
+    "apollo-server-express": "^2.14.2",
     "babel": "^6.23.0",
     "babel-register": "^6.26.0",
     "babel-runtime": "^6.26.0",
